@@ -1,3 +1,5 @@
-/test-sambeon/testData.py
-/test-sambeon/__pycache__
-/test-sambeon/venv
+/test_sambeon/testData.py
+/test_sambeon/__pycache__
+/venv
+
+__pycache__
