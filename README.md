@@ -16,7 +16,7 @@ arm_length: float<br>
 
 ### response
 {
-  "x": fleat,
-  "y": fleat,
-  "z": fleat
+  "x": float,
+  "y": float,
+  "z": float
 }
