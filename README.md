@@ -1,4 +1,29 @@
+# 백엔드 테스트
+1. uvicorn api_server:app --reload 실행
+2. http://127.0.0.1:8000/docs/ 접속
+
 # backend: 삼변측량
+## request
+- GET
+
+## path
+- /get_position
+
+## query parameter
+- up_distance: float
+- down_distance: float
+- front_distance: float
+- left_distance: float
+- arm_length: float
+
+## response
+```
+{
+  "x": float,
+  "y": float,
+  "z": float
+}
+```
 
 # backend: PCAP features
 ## 학습-테스트
@@ -14,22 +39,18 @@
 ## 단일 pcap 파일 검사
 1. python load_and_test_dataset.py --test-pcap your_capture.pcap
 
-## 백엔드 테스트
-1. uvicorn api_server:app --reload 실행
-2. http://127.0.0.1:8000/docs/ 접속
-3. Try it out 선택 -> 파일 업로드 후 실행
+## request
+- GET
 
-## 엔드포인트
-- GET: /
-  - 서버 상태 확인
-- POST: /pcap/analyze
-  - 구동 엔드포인트
+## path
+- /pcap/analyze
 
-## 출력 JSON 형식
+## query parameter
+- file: File
+
+## response
 ```
 {
-  "targets": [
-    "02:00:11:22:92:f7|56:8c:94:88:e5:0d"
-  ]
+  "targets": [ dict ]
 }
 ```
