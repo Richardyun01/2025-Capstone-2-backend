@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from .models import *
-from test_sambeon.sambyeon import AP3D, Trilateration3D
+from services.sambyeon.models import *
+from services.sambyeon.sambyeon import AP3D, Trilateration3D
 
 router = APIRouter(prefix="/sambyeon")
 

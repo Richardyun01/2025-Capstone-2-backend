@@ -2,12 +2,17 @@ from fastapi import FastAPI, Request, HTTPException, status, Depends  # FastAPI 
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from routers import feature_router
+from routers import sambyeon_router
 
-import test_sambeon.sambyeon_router as sambyeon_router
-
-app = FastAPI()  # (lifespan=lifespan)
+app = FastAPI(
+    title="Backend API",
+    description="API 통합",
+    version="1.0.0",
+)  # (lifespan=lifespan)
 
 app.include_router(sambyeon_router.router)
+app.include_router(feature_router.router)
 
 
 app.add_middleware(
@@ -23,4 +28,4 @@ app.add_middleware(
 def main():
     # db.execute("SELECT count(*) FROM testDB.bookTable")
     # result = db.fetchall()
-    return "hello"
+    return "Hello world!"
