@@ -186,4 +186,4 @@ cython_debug/
 *.lbl
 *.npy
 *.bat
-*.pkl
+*.sh
