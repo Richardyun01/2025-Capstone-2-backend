@@ -1,3 +1,5 @@
+## src 기반 스트림
+## 사용법: python extract_streams2.py -f {파일명1}.pcap -o {파일명2}.csv
 import argparse
 import csv
 import numpy as np
@@ -23,39 +25,19 @@ def stream_features(stream):
     length_1090_count = sum(1 for l in lengths if abs(l - 1090) <= 50)
     total_packets = len(lengths)
     inbound_bytes = sum(lengths)
-    mean_interval = np.mean(intervals) if intervals else 0
+    mean_interval = np.mean(intervals) if intervals else 0.0
 
     features = [
         total_packets,  # 0
         length_1090_count,  # 1
         max_consecutive_packets(lengths),  # 2
         mean_interval,  # 3
-        np.std(intervals) if intervals else 0,  # 4
-        np.mean(lengths),  # 5
-        np.std(lengths),  # 6
+        np.std(intervals) if intervals else 0.0,  # 4
+        np.mean(lengths) if lengths else 0.0,  # 5
+        np.std(lengths) if lengths else 0.0,  # 6
         inbound_bytes,  # 7
     ]
     return features
-
-
-def label_stream(features):
-    total_packets = features[0]
-    length_1090_count = features[1]
-    max_consec = features[2]
-    mean_interval = features[3]
-    mean_length = features[5]
-    inbound_bytes = features[7]
-
-    # 완화된 탐지 조건
-    rule = (
-        length_1090_count >= 50
-        and max_consec >= 8
-        and mean_interval <= 0.5
-        and mean_length >= 600
-        and total_packets >= 100
-        and inbound_bytes >= 60000
-    )
-    return int(rule)
 
 
 def cmd_extract(args):
@@ -69,29 +51,33 @@ def cmd_extract(args):
         if not pkt.haslayer(Dot11):
             continue
         dot11 = pkt[Dot11]
-        if dot11.type != 2 or dot11.addr2 is None or dot11.addr1 is None:
+        # data frame (type=2)이며 addr2(src)가 있어야 함
+        if dot11.type != 2 or dot11.addr2 is None:
             continue
 
-        key = (dot11.addr2, dot11.addr1)  # (src_mac, dest_mac)
+        src_mac = dot11.addr2
+        key = src_mac
+
         plen = len(pkt)
+        now = float(pkt.time)
 
         stream = stream_data[key]
         stream["packet_lengths"].append(plen)
-        stream["timestamps"].append(float(pkt.time))
+        stream["timestamps"].append(now)
 
         if key in last_time:
-            interval = float(pkt.time) - last_time[key]
+            interval = now - last_time[key]
             stream["packet_intervals"].append(interval)
-        last_time[key] = float(pkt.time)
+        last_time[key] = now
 
     reader.close()
 
-    with open(args.output, "w", newline="") as wf, open(args.labels, "w") as lf:
+    # CSV 헤더에 src_mac만 남기고, feature 컬럼들 기록
+    with open(args.output, "w", newline="") as wf:
         writer = csv.writer(wf)
         writer.writerow(
             [
                 "src_mac",
-                "dest_mac",
                 "total_packets",
                 "length_1090_count",
                 "max_consecutive_1090",
@@ -103,22 +89,19 @@ def cmd_extract(args):
             ]
         )
 
-        for (src_mac, dest_mac), stream in stream_data.items():
-            if len(stream["packet_lengths"]) < 3:
-                continue  # 너무 짧은 스트림은 제외
-
+        for src_mac, stream in stream_data.items():
             features = stream_features(stream)
-            writer.writerow([src_mac, dest_mac] + features)
-            lf.write(f"{label_stream(features)}\n")
+            writer.writerow([src_mac] + features)
 
-    print(f"Extracted {len(stream_data)} streams")
+    print(f"Extracted {len(stream_data)} unique src_mac streams")
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Extract stream features for ML")
-    parser.add_argument("-f", "--pcap", required=True, help="PCAP file path")
-    parser.add_argument("-o", "--output", required=True, help="Output CSV file")
-    parser.add_argument("-l", "--labels", required=True, help="Output labels file")
+    parser = argparse.ArgumentParser(
+        description="Extract Wi-Fi stream features grouped by src MAC from a single PCAP"
+    )
+    parser.add_argument("-f", "--pcap", required=True, help="PCAP 파일 경로")
+    parser.add_argument("-o", "--output", required=True, help="결과 CSV 파일 경로")
     return parser.parse_args()
 
 

@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers import feature_router
 from routers import sambyeon_router
+from routers import feature_pattern_router
 
 app = FastAPI(
     title="Backend API",
@@ -13,6 +14,7 @@ app = FastAPI(
 
 app.include_router(sambyeon_router.router)
 app.include_router(feature_router.router)
+app.include_router(feature_pattern_router.router)
 
 
 app.add_middleware(
