@@ -51,6 +51,16 @@
 ## response
 ```
 {
-  "targets": [ dict ]
+  "targets": [ { List [dict] } ]
 }
 ```
+- 리스트 내의 딕셔너리 src_mac, dest_mac
+- ex
+  ```
+  {
+    "targets": [
+      { "src_mac": "02:00:11:22:75:14", "dest_mac": "56:8c:94:88:e5:0d" },
+      { "src_mac": "3c:67:a2:38:4c:98", "dest_mac": "9c:25:95:3c:bc:0f" }
+    ]
+  }
+  ```
