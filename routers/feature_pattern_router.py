@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from services.features.feature_extractor import analyze_pcap
+from services.features_pattern.feature_extractor import analyze_pcap
 
-router = APIRouter(prefix="/pcap")
+router = APIRouter(prefix="/pcap_pattern")
 
 
 @router.post("/analyze")

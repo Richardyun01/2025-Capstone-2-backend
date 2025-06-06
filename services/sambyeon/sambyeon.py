@@ -112,26 +112,26 @@ def run_multiple_times(noisy_case, runs=5):
     return median_position
 
 
-# if __name__ == "__main__":
-#     temp, scaled_flags = normalize_test_cases_to_m(test_cases)
-#     test_cases_with_noise = add_noise_to_distances(temp, noise_level=0.05)
+if __name__ == "__main__":
+    temp, scaled_flags = normalize_test_cases_to_m(test_cases)
+    test_cases_with_noise = add_noise_to_distances(temp, noise_level=0.05)
 
-#     for idx, (case, true_pos, scaled) in enumerate(
-#         zip(test_cases_with_noise, true_positions, scaled_flags)
-#     ):
-#         predicted = run_multiple_times(case, runs=5)
+    for idx, (case, true_pos, scaled) in enumerate(
+        zip(test_cases_with_noise, true_positions, scaled_flags)
+    ):
+        predicted = run_multiple_times(case, runs=5)
 
-#         # true_pos를 스케일링 적용 여부에 따라 처리
-#         scaled_true_pos = (
-#             tuple(coord / 100 for coord in true_pos) if scaled else true_pos
-#         )
-#         error = np.linalg.norm(np.array(predicted) - np.array(scaled_true_pos))
+        # true_pos를 스케일링 적용 여부에 따라 처리
+        scaled_true_pos = (
+            tuple(coord / 100 for coord in true_pos) if scaled else true_pos
+        )
+        error = np.linalg.norm(np.array(predicted) - np.array(scaled_true_pos))
 
-#         print(f"\n--- Test Case {idx+1} ---")
-#         if scaled:
-#             print("⚠️  [Scaled] (x, y, z, d) and True Position divided by 100")
-#         print(f"True Position:      {scaled_true_pos}")
-#         print(
-#             f"Predicted Position: ({predicted[0]:.4f}, {predicted[1]:.4f}, {predicted[2]:.4f})"
-#         )
-#         print(f"Position Error:     {error:.4f} units")
+        print(f"\n--- Test Case {idx+1} ---")
+        if scaled:
+            print("⚠️  [Scaled] (x, y, z, d) and True Position divided by 100")
+        print(f"True Position:      {scaled_true_pos}")
+        print(
+            f"Predicted Position: ({predicted[0]:.4f}, {predicted[1]:.4f}, {predicted[2]:.4f})"
+        )
+        print(f"Position Error:     {error:.4f} units")

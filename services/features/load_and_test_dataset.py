@@ -28,7 +28,7 @@ def build_and_cache(feat_glob, lbl_glob, cache_dir):
     X_list = []
     for f in feats:
         df = pd.read_csv(f)
-        X_list.append(df.drop(columns=["stream_key"]).values)
+        X_list.append(df.drop(columns=["src_mac", "dest_mac"]).values)
     X = np.vstack(X_list)
     y = np.hstack([np.loadtxt(l, dtype=int) for l in lbls])
     # 디렉터리 생성
@@ -41,24 +41,24 @@ def build_and_cache(feat_glob, lbl_glob, cache_dir):
 
 
 # 1. 캐시된 파일이 있으면 로드, 없으면 빌드 & 캐시
-if os.path.exists(TRAIN_XNPY) and os.path.exists(TRAIN_YNPY):
-    # allow_pickle=True 추가
-    X_train = np.load(TRAIN_XNPY, allow_pickle=True)
-    y_train = np.load(TRAIN_YNPY, allow_pickle=True)
-    print(f"Loaded cached train: X shape {X_train.shape}, y shape {y_train.shape}")
-else:
+FORCE_REGENERATE = True
+
+if FORCE_REGENERATE or not os.path.exists(TRAIN_XNPY) or not os.path.exists(TRAIN_YNPY):
     X_train, y_train = build_and_cache(
         "features/train/*.csv", "labels/train/*.lbl", TRAIN_CACHE
     )
-
-if os.path.exists(TEST_XNPY) and os.path.exists(TEST_YNPY):
-    X_test = np.load(TEST_XNPY, allow_pickle=True)
-    y_test = np.load(TEST_YNPY, allow_pickle=True)
-    print(f"Loaded cached test:  X shape {X_test.shape},  y shape {y_test.shape}")
 else:
+    X_train = np.load(TRAIN_XNPY, allow_pickle=True)
+    y_train = np.load(TRAIN_YNPY, allow_pickle=True)
+
+if FORCE_REGENERATE or not os.path.exists(TEST_XNPY) or not os.path.exists(TEST_YNPY):
     X_test, y_test = build_and_cache(
         "features/test/*.csv", "labels/test/*.lbl", TEST_CACHE
     )
+else:
+    X_test = np.load(TEST_XNPY, allow_pickle=True)
+    y_test = np.load(TEST_YNPY, allow_pickle=True)
+    print(f"Loaded cached test:  X shape {X_test.shape},  y shape {y_test.shape}")
 
 print("Train shape:", X_train.shape, y_train.shape)
 print("Test  shape:", X_test.shape, y_test.shape)
@@ -133,8 +133,8 @@ if __name__ == "__main__":
         if not csvs:
             raise FileNotFoundError("특징 CSV가 없습니다.")
         df = pd.read_csv(csvs[0])
-        stream_keys = df["stream_key"].values
-        X_single = df.drop(columns=["stream_key"]).values
+        stream_keys = df["src_mac", "dest_mac"].values
+        X_single = df.drop(columns=["src_mac", "dest_mac"]).values
 
         # 3) 예측 & 출력
         model = joblib.load("best_svm_model.pkl")
