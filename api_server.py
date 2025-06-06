@@ -14,7 +14,7 @@ app = FastAPI(
 
 app.include_router(sambyeon_router.router)
 app.include_router(feature_router.router)
-app.include_router(feature_pattern_router.router)
+# app.include_router(feature_pattern_router.router)
 
 
 app.add_middleware(
