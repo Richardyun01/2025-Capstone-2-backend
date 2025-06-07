@@ -21,4 +21,4 @@ async def analyze(file: UploadFile = File(...)):
 
 @router.get("/suspicious")
 async def get_suspicious():
-    return {"targets": "G644409DSTEJ"}
+    return {"targets": [["G644409DSTEJ"]]}
