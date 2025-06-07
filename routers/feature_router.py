@@ -17,3 +17,10 @@ async def analyze(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
+
+
+@router.get("/suspicious")
+async def get_suspicious():
+    return {
+        "targets": "G644409DSTEJ",
+    }
