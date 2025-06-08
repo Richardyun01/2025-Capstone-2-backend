@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from services.sambyeon.models import *
-from services.sambyeon.sambyeon import AP3D, Trilateration3D
+from services.sambyeon.sambyeon import *
 
 router = APIRouter(prefix="/sambyeon")
 
@@ -13,17 +13,19 @@ def get_position(
     left_distance: float,
     arm_length: float,
 ):
-    # AP 좌표 설정
-    up_ap = AP3D(0, 0, arm_length, up_distance)
-    down_ap = AP3D(0, 0, -arm_length, down_distance)
-    left_ap = AP3D(-arm_length, 0, 0, left_distance)
-    front_ap = AP3D(0, arm_length, 0, front_distance)
+    # 원시 입력 데이터 구성
+    raw_case = [
+        (0, 0, arm_length, up_distance),
+        (0, 0, -arm_length, down_distance),
+        (-arm_length, 0, 0, left_distance),
+        (0, arm_length, 0, front_distance),
+    ]
 
-    aps = [up_ap, down_ap, left_ap, front_ap]
+    # 스케일 정규화
+    normalized_case = normalize_if_needed(raw_case)
 
-    # 위치 계산
-    trilateration = Trilateration3D(aps)
-    predicted = trilateration.calcUserLocation()
+    # 여러 번 실행 후 중앙값
+    predicted = run_multiple_times(normalized_case, runs=5)
 
     # 결과 반환
     return Position(x=predicted[0], y=predicted[1], z=predicted[2])

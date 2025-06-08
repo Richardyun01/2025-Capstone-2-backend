@@ -2,7 +2,9 @@ import random
 import math
 
 
-def generate_point_within_range(arm_length, min_distance, max_distance):
+def generate_point_within_range(
+    arm_length, min_distance, max_distance, max_attempts=100000
+):
     fixed_points = {
         "up": [0, 0, arm_length],
         "down": [0, 0, -arm_length],
@@ -10,7 +12,7 @@ def generate_point_within_range(arm_length, min_distance, max_distance):
         "left": [-arm_length, 0, 0],
     }
 
-    while True:
+    for _ in range(max_attempts):
         A = [
             random.uniform(-2 * arm_length, 2 * arm_length),
             random.uniform(-2 * arm_length, 2 * arm_length),
@@ -18,18 +20,19 @@ def generate_point_within_range(arm_length, min_distance, max_distance):
         ]
 
         distances = {}
-        valid = True
         for name, point in fixed_points.items():
             dist = math.sqrt(
                 (A[0] - point[0]) ** 2 + (A[1] - point[1]) ** 2 + (A[2] - point[2]) ** 2
             )
-            if not (min_distance < dist < max_distance):
-                valid = False
-                break
             distances[name] = dist
 
-        if valid:
+        avg_distance = np.mean(list(distances.values()))
+        if min_distance < avg_distance < max_distance:
             return {"A": A, "distances": distances}
+
+    raise ValueError(
+        f"Failed to generate point within {min_distance}-{max_distance} after {max_attempts} attempts."
+    )
 
 
 result = generate_point_within_range(arm_length=65, min_distance=50, max_distance=150)
