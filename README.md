@@ -54,7 +54,7 @@
   "targets": [ [ List [dict] ] ]
 }
 ```
-- 리스트 내의 딕셔너리 src_mac, dest_mac
+- 리스트 내의 리스트 src_mac, dest_mac
 - ex
   ```
   {
