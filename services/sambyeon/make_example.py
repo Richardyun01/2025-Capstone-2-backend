@@ -1,22 +1,23 @@
 import random
 import math
+import numpy as np
 
 
 def generate_point_within_range(
-    arm_length, min_distance, max_distance, max_attempts=100000
+    one_side_length, knee_to_eyes, min_distance, max_distance, max_attempts=100000
 ):
     fixed_points = {
-        "up": [0, 0, arm_length],
-        "down": [0, 0, -arm_length],
-        "front": [0, arm_length, 0],
-        "left": [-arm_length, 0, 0],
+        "origin": [0, 0, knee_to_eyes],
+        "origin_right": [one_side_length, 0, 0],
+        "origin_cross_one": [one_side_length, one_side_length, 0],
+        "origin_cross_two": [one_side_length, one_side_length * 2, knee_to_eyes],
     }
 
     for _ in range(max_attempts):
         A = [
-            random.uniform(-2 * arm_length, 2 * arm_length),
-            random.uniform(-2 * arm_length, 2 * arm_length),
-            random.uniform(-2 * arm_length, 2 * arm_length),
+            random.uniform(-2 * one_side_length, 2 * one_side_length),
+            random.uniform(-2 * one_side_length, 2 * one_side_length),
+            random.uniform(-2 * one_side_length, 2 * one_side_length),
         ]
 
         distances = {}
@@ -35,7 +36,9 @@ def generate_point_within_range(
     )
 
 
-result = generate_point_within_range(arm_length=65, min_distance=50, max_distance=150)
+result = generate_point_within_range(
+    one_side_length=200, knee_to_eyes=100, min_distance=100, max_distance=300
+)
 print(f"Generated Point A: {result['A']}")
 for name, dist in result["distances"].items():
     print(f"Distance to {name}: {dist:.2f}")

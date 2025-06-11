@@ -7,18 +7,19 @@ router = APIRouter(prefix="/sambyeon")
 
 @router.get("/get_positiion")
 def get_position(
-    up_distance: float,
-    down_distance: float,
-    front_distance: float,
-    left_distance: float,
-    arm_length: float,
+    origin: float,
+    origin_right: float,
+    origin_cross_one: float,
+    origin_cross_two: float,
+    one_side_length: float,
+    knee_to_eyes: float,
 ):
     # 원시 입력 데이터 구성
     raw_case = [
-        (0, 0, arm_length, up_distance),
-        (0, 0, -arm_length, down_distance),
-        (-arm_length, 0, 0, left_distance),
-        (0, arm_length, 0, front_distance),
+        (0, 0, knee_to_eyes, origin),
+        (one_side_length, 0, 0, origin_right),
+        (one_side_length, one_side_length, 0, origin_cross_one),
+        (one_side_length, one_side_length * 2, knee_to_eyes, origin_cross_two),
     ]
 
     # 스케일 정규화
