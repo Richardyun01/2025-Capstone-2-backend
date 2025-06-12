@@ -23,6 +23,6 @@ async def analyze(file: UploadFile = File(...)):
 
 @router.post("/suspicious")
 async def get_suspicious(file: UploadFile = File(...)):
-    delay = random.uniform(25, 30)
+    delay = random.uniform(19, 23)
     await asyncio.sleep(delay)
     return {"targets": [["G644409DSTEJ"]]}
