@@ -16,10 +16,10 @@ def get_position(
 ):
     # 원시 입력 데이터 구성
     raw_case = [
-        (0, 0, knee_to_eyes, origin),
-        (one_side_length, 0, 0, origin_right),
-        (one_side_length, one_side_length, 0, origin_cross_one),
-        (one_side_length, one_side_length * 2, knee_to_eyes, origin_cross_two),
+        (0, 0, 0, origin),
+        (one_side_length, 0, -knee_to_eyes, origin_right),
+        (one_side_length, one_side_length, -knee_to_eyes, origin_cross_one),
+        (one_side_length, one_side_length * 2, 0, origin_cross_two),
     ]
 
     # 스케일 정규화
