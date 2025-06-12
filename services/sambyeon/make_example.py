@@ -7,10 +7,10 @@ def generate_point_within_range(
     one_side_length, knee_to_eyes, min_distance, max_distance, max_attempts=100000
 ):
     fixed_points = {
-        "origin": [0, 0, knee_to_eyes],
-        "origin_right": [one_side_length, 0, 0],
-        "origin_cross_one": [one_side_length, one_side_length, 0],
-        "origin_cross_two": [one_side_length, one_side_length * 2, knee_to_eyes],
+        "origin": [0, 0, 0],
+        "origin_right": [one_side_length, 0, -knee_to_eyes],
+        "origin_cross_one": [one_side_length, one_side_length, -knee_to_eyes],
+        "origin_cross_two": [one_side_length, one_side_length * 2, 0],
     }
 
     for _ in range(max_attempts):
@@ -37,7 +37,7 @@ def generate_point_within_range(
 
 
 result = generate_point_within_range(
-    one_side_length=200, knee_to_eyes=100, min_distance=100, max_distance=300
+    one_side_length=100, knee_to_eyes=100, min_distance=100, max_distance=300
 )
 print(f"Generated Point A: {result['A']}")
 for name, dist in result["distances"].items():
