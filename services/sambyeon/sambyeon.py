@@ -102,7 +102,7 @@ def normalize_test_cases_to_m(test_cases, threshold=100, scale=100):
 # api 용
 def normalize_if_needed(case, threshold=100, scale=100):
     count_large_d = sum(1 for (_, _, _, d) in case if d >= threshold)
-    if count_large_d >= 3:
+    if count_large_d >= 0:
         normalized_case = [
             (x / scale, y / scale, z / scale, d / scale) for x, y, z, d in case
         ]
