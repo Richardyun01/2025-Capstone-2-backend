@@ -26,7 +26,7 @@ def get_position(
     normalized_case = normalize_if_needed(raw_case)
 
     # 여러 번 실행 후 중앙값
-    predicted = run_multiple_times(normalized_case, runs=100)
+    predicted = run_multiple_times(normalized_case, runs=20)
 
     # 결과 반환
     return Position(x=predicted[0], y=predicted[1], z=predicted[2])
