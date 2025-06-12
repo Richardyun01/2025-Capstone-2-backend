@@ -17,7 +17,7 @@ def get_position(
     # 원시 입력 데이터 구성
     raw_case = [
         (0, 0, -knee_to_eyes, origin),
-        (one_side_length, 0, origin_right),
+        (one_side_length, 0, 0, origin_right),
         (one_side_length, one_side_length, 0, origin_cross_one),
         (one_side_length, one_side_length * 2, -knee_to_eyes, origin_cross_two),
     ]
