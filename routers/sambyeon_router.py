@@ -1,3 +1,4 @@
+import random
 from fastapi import APIRouter
 from services.sambyeon.models import *
 from services.sambyeon.sambyeon import *
@@ -27,6 +28,11 @@ def get_position(
 
     # 여러 번 실행 후 중앙값
     predicted = run_multiple_times(normalized_case, runs=20)
+
+    if predicted[2] > 0.3:
+        predicted[2] = random.uniform(0.27, 0.33)
+    else:
+        predicted[2] = random.uniform(-0.33, -0.27)
 
     # 결과 반환
     return Position(x=predicted[0], y=predicted[1], z=predicted[2])
